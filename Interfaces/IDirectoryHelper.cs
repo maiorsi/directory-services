@@ -1,5 +1,10 @@
-namespace DirectoryServices.Interfaces;
+// <copyright file="IDirectoryHelper.cs" owner="maiorsi">
+// Licenced under the MIT Licence.
+// </copyright>
 
-public interface IDirectoryService
+namespace DirectoryServices.Interfaces
 {
+    public interface IDirectoryService
+    {
+    }
 }
