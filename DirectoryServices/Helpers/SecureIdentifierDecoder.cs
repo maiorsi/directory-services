@@ -13,7 +13,7 @@ namespace DirectoryServices.Helpers
         /// </summary>
         /// <param name="sidBytes">The binary secure identifier</param>
         /// <returns>The string format of the secure identifier</returns>
-        public static string? DecodeSecureIdentifier(byte[] sidBytes)
+        public static string? Decode(byte[] sidBytes)
         {
             var sid = new StringBuilder("S-");
 
