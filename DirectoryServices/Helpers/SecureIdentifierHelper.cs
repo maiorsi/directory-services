@@ -13,7 +13,7 @@ namespace DirectoryServices.Helpers
         private const string SID_PATTERN = "^[sS]-\\d-\\d{1,13}(?:-\\d{1,10})*$";
 
         /// <summary>
-        /// Decode a secure identifier.
+        /// Decode a secure identifier (SId) into string format 'S-1-*'.
         /// </summary>
         /// <param name="secureIdentifierBytes">The binary secure identifier</param>
         /// <returns>The string format of the secure identifier</returns>
@@ -60,6 +60,11 @@ namespace DirectoryServices.Helpers
             return sid.ToString();
         }
 
+        /// <summary>
+        /// Encode a SId string format secure identifier to binary format.
+        /// </summary>
+        /// <param name="secureIdentifierString"></param>
+        /// <returns>Binary format (byte[]) of secure identifier (SId)</returns>
         public static byte[] Encode(string? secureIdentifierString)
         {
             byte[] bytes = new byte[0];
@@ -82,12 +87,13 @@ namespace DirectoryServices.Helpers
             using var memoryStream = new MemoryStream();
             using var binaryWriter = new BinaryWriter(memoryStream);
 
-            // Big Endian
-            byte[] littleEndianBytes = BitConverter.GetBytes(long.Parse(secureIdentifierSections[2]));
+            // Big endian to little endian.
+            // By default BitConverter/BinaryWriter work as little endian but we expect the first 8 bytes to be big endian.
+            byte[] endianBytes = BitConverter.GetBytes(long.Parse(secureIdentifierSections[2]));
 
-            Array.Reverse(littleEndianBytes);
+            Array.Reverse(endianBytes);
 
-            binaryWriter.Write(littleEndianBytes);
+            binaryWriter.Write(endianBytes);
 
             for (var i = 0; i < count; i++)
             {
