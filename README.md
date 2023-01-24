@@ -1,7 +1,17 @@
 # directory-services
+
 DotNet Directory Services Library
 
-## Getting Started
+## Installation
+
+Use the DotNet CLI package manager [dotnet](https://learn.microsoft.com/en-us/dotnet/core/tools/) to build the project.
+
+```bash
+dotnet restore
+dotnet build
+```
+
+## Usage
 
 ### App Settings
 ```json
@@ -22,3 +32,14 @@ DotNet Directory Services Library
     }
 }
 ```
+
+## Contributing
+
+Pull requests are welcome. For major changes, please open an issue first
+to discuss what you would like to change.
+
+Please make sure to update tests as appropriate.
+
+## License
+
+[MIT](https://choosealicense.com/licenses/mit/)
