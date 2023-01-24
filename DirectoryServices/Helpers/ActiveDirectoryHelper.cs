@@ -36,6 +36,15 @@ namespace DirectoryServices.Helpers
                 _logger.LogWarning("Exception occurred parsing objectSid for user {user}{exception}", directoryEntry.Name, exception);
             }
 
+            try
+            {
+                user.Guid = new Guid((byte[])(directoryEntry.Properties["objectSid"].Value ?? 0)).ToString();
+            }
+            catch (Exception exception)
+            {
+                _logger.LogWarning("Exception occurred parsing guid for user {user}{exception}", directoryEntry.Name, exception);
+            }
+
             return user;
         }
     }
