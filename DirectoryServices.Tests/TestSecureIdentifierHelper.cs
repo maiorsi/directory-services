@@ -1,10 +1,12 @@
-using DirectoryServices.Helpers;
+// <copyright file="TestSecureIdentifierHelper.cs" owner="maiorsi">
+// Licenced under the MIT Licence.
+// </copyright>
 
-using System;
+using DirectoryServices.Helpers;
 
 namespace DirectoryServices.Tests;
 
-public class TestSecureIdentifierDecoder
+public class TestSecureIdentifierHelper
 {
     private const string BinarySidString = "AQQAAAAAAAUVAAAAwdFKz9WmazDFb3Y8";
     private const string SidString = "S-1-5-21-3477787073-812361429-1014394821";

@@ -1,3 +1,7 @@
+// <copyright file="NoResultsException.cs" owner="maiorsi">
+// Licenced under the MIT Licence.
+// </copyright>
+
 using System;
 
 namespace DirectoryServices.Exceptions

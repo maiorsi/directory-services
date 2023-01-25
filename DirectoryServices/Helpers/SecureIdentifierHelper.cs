@@ -1,3 +1,7 @@
+// <copyright file="SecureIdentifierHelper.cs" owner="maiorsi">
+// Licenced under the MIT Licence.
+// </copyright>
+
 using System;
 using System.IO;
 using System.Text;

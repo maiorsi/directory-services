@@ -1,3 +1,7 @@
+// <copyright file="DirectoryServiceSettings.cs" owner="maiorsi">
+// Licenced under the MIT Licence.
+// </copyright>
+
 using System.Collections.Generic;
 
 namespace DirectoryServices.Settings
@@ -35,7 +39,6 @@ namespace DirectoryServices.Settings
                 return dnEscapeCharacters;
             }
         }
-        public string? Domain { get; set; }
         public string? LdapConnectionFallback { get; set; }
         public string? LdapConnectionOverride { get; set; }
         public string? LdapConnectionUrl { get; set; }

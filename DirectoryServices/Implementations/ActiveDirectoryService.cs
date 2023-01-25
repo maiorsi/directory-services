@@ -1,3 +1,7 @@
+// <copyright file="ActiveDirectoryService.cs" owner="maiorsi">
+// Licenced under the MIT Licence.
+// </copyright>
+
 using System.Collections.Generic;
 
 using DirectoryServices.Interfaces;
