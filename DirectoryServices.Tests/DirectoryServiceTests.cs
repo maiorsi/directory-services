@@ -1,4 +1,4 @@
-// <copyright file="DirectoryServiceHelperTests.cs" owner="maiorsi">
+// <copyright file="DirectoryServiceTests.cs" owner="maiorsi">
 // Licenced under the MIT Licence.
 // </copyright>
 
@@ -7,6 +7,7 @@ using System.DirectoryServices;
 using System.Runtime.InteropServices;
 
 using DirectoryServices.Helpers;
+using DirectoryServices.Impl;
 using DirectoryServices.Models;
 
 using Microsoft.Extensions.Logging;
@@ -17,7 +18,7 @@ using Novell.Directory.Ldap;
 
 namespace DirectoryServices.Tests;
 
-public class DirectoryServiceHelperTests
+public class DirectoryServiceTests
 {
     private const string Name = "Test User 1";
     private const string DistinguishedName = "CN=Test\\ User\\ 1";
@@ -37,7 +38,7 @@ public class DirectoryServiceHelperTests
     {
         Skip.IfNot(RuntimeInformation.IsOSPlatform(OSPlatform.Windows));
 
-        var mockLogger = Mock.Of<ILogger<ActiveDirectoryHelper>>();
+        var mockLogger = Mock.Of<ILogger<ActiveDirectoryService>>();
         var activeDirectoryHelper = new ActiveDirectoryHelper(mockLogger);
 
         var mockDirectoryEntry = Mock.Of<DirectoryEntryAdapter>();
