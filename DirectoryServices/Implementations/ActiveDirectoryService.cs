@@ -19,48 +19,13 @@ using Microsoft.Extensions.Options;
 
 namespace DirectoryServices.Impl
 {
-    public class ActiveDirectoryService : IDirectoryService
+    public class ActiveDirectoryService : IBaseDirectoryService
     {
         private readonly ILogger<ActiveDirectoryService> _logger;
 
         private readonly ActiveDirectoryHelper _activeDirectoryHelper;
         private readonly string? _ldapConnectionString;
         private readonly DirectorySettings _directorySettings;
-
-        private readonly string LDAP_MEMBER = "member:1.2.840.113556.1.4.1941:={0}";
-        private readonly string LDAP_MEMBER_OF = "memberOf:1.2.840.113556.1.4.1941:={0}";
-        private readonly string LDAP_SID = "objectSID={0}";
-        private readonly int PAGE_ONE = 1;
-        private readonly int SINGLE_LIMIT = 2;
-        private readonly int AD_LIMIT = 1000;
-
-        private readonly string[] _userProperties = new string[]
-        {
-            "displayName",
-            "distinguishedName",
-            "givenName",
-            "objectGUID",
-            "objectSID",
-            "mail",
-            "member",
-            "memberOf",
-            "name",
-            "sAMAccountName",
-            "sn",
-            "telephoneNumber",
-            "userPrincipalName",
-            "userAccountControl"
-        };
-
-        private readonly string[] _groupProperties = new string[]
-        {
-            "distinguishedName",
-            "objectGUID",
-            "objectSID",
-            "member",
-            "memberOf",
-            "name"
-        };
 
         public ActiveDirectoryService(ILogger<ActiveDirectoryService> logger, IOptions<DirectorySettings> directorySettings)
         {
@@ -97,7 +62,7 @@ namespace DirectoryServices.Impl
 
                 if (string.IsNullOrEmpty(_ldapConnectionString))
                 {
-                    _logger.LogWarning("Failed to find a valid ldap connection string. Falling back to '{ldap}'.", _directorySettings.LdapConnectionFallback, exception);
+                    _logger.LogWarning("Failed to find a valid ldap connection string. Falling back to '{ldap}'.", _directorySettings.LdapConnectionFallback);
                     _ldapConnectionString = _directorySettings.LdapConnectionFallback;
                 }
             }
@@ -109,7 +74,7 @@ namespace DirectoryServices.Impl
         }
 
         /// <inheritdoc />
-        public IReadOnlyCollection<Group> GetAncestors(string distinguishedName, string? ancestorSearchBase = null)
+        public override IReadOnlyCollection<Group> GetAncestors(string distinguishedName, string? ancestorSearchBase = null)
         {
             var sanitisedDN = sanitisedDistinguishedName(distinguishedName);
 
@@ -118,7 +83,8 @@ namespace DirectoryServices.Impl
             return GetGroups(query, PAGE_ONE, AD_LIMIT, ancestorSearchBase);
         }
 
-        public IReadOnlyCollection<User> GetMembers(string distinguishedName, string? memberSearchBase = null)
+        /// <inheritdoc />
+        public override IReadOnlyCollection<User> GetMembers(string distinguishedName, string? memberSearchBase = null)
         {
             var sanitisedDN = sanitisedDistinguishedName(distinguishedName);
 
@@ -127,7 +93,8 @@ namespace DirectoryServices.Impl
             return GetUsers(query, PAGE_ONE, AD_LIMIT, memberSearchBase);
         }
 
-        public Group? SearchGroupBySid(string sid, string? memberSearchBase = null, string? ancestorSearchBase = null, bool includeMembers = false, bool includeAncestors = false)
+        /// <inheritdoc />
+        public override Group? SearchGroupBySid(string sid, string? memberSearchBase = null, string? ancestorSearchBase = null, bool includeMembers = false, bool includeAncestors = false)
         {
             var query = string.Format(LDAP_SID, sid);
 
@@ -147,12 +114,14 @@ namespace DirectoryServices.Impl
             }
         }
 
-        public IReadOnlyCollection<Group> SearchGroupsByLdapQuery(string ldapQuery, int page, int pageSize, string? searchBase = null, string? memberSearchBase = null, string? ancestorSearchBase = null, bool includeMembers = false, bool includeAncestors = false)
+        /// <inheritdoc />
+        public override IReadOnlyCollection<Group> SearchGroupsByLdapQuery(string ldapQuery, int page, int pageSize, string? searchBase = null, string? memberSearchBase = null, string? ancestorSearchBase = null, bool includeMembers = false, bool includeAncestors = false)
         {
             return GetGroups(ldapQuery, page, pageSize, searchBase, includeMembers, includeAncestors);
         }
 
-        public User? SearchUserBySid(string sid, string? ancestorSearchBase = null, bool includeAncestors = false)
+        /// <inheritdoc />
+        public override User? SearchUserBySid(string sid, string? ancestorSearchBase = null, bool includeAncestors = false)
         {
             var query = string.Format(LDAP_SID, sid);
 
@@ -172,7 +141,8 @@ namespace DirectoryServices.Impl
             }
         }
 
-        public IReadOnlyCollection<User> SearchUsersByLdapQuery(string ldapQuery, int page, int pageSize, string? searchBase = null, string? ancestorSearchBase = null, bool includeAncestors = false)
+        /// <inheritdoc />
+        public override IReadOnlyCollection<User> SearchUsersByLdapQuery(string ldapQuery, int page, int pageSize, string? searchBase = null, string? ancestorSearchBase = null, bool includeAncestors = false)
         {
             return GetUsers(ldapQuery, page, pageSize, searchBase, includeAncestors);
         }

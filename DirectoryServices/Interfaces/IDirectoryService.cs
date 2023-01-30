@@ -1,4 +1,4 @@
-// <copyright file="IDirectoryHelper.cs" owner="maiorsi">
+// <copyright file="IDirectoryService.cs" owner="maiorsi">
 // Licenced under the MIT Licence.
 // </copyright>
 
