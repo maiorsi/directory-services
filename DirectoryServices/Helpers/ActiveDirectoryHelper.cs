@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security.Principal;
 
+using DirectoryServices.Impl;
 using DirectoryServices.Models;
 
 using Microsoft.Extensions.Logging;
@@ -17,14 +18,14 @@ namespace DirectoryServices.Helpers
 {
     public class ActiveDirectoryHelper
     {
-        private readonly ILogger<ActiveDirectoryHelper> _logger;
+        private readonly ILogger<ActiveDirectoryService> _logger;
 
-        public ActiveDirectoryHelper(ILogger<ActiveDirectoryHelper> logger)
+        public ActiveDirectoryHelper(ILogger<ActiveDirectoryService> logger)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        internal User FromDirectoryEntry(DirectoryEntry directoryEntry, bool includeAncestors)
+        internal User FromDirectoryEntry(DirectoryEntry directoryEntry, bool? includeAncestors)
         {
             _logger.LogTrace("User instantiation - {name}", directoryEntry.Name);
 
@@ -129,7 +130,7 @@ namespace DirectoryServices.Helpers
                 _logger.LogWarning("Exception occurred parsing account control for user {user} {exception}", directoryEntry.Name, exception);
             }
 
-            if (includeAncestors)
+            if (includeAncestors.GetValueOrDefault())
             {
                 try
                 {
