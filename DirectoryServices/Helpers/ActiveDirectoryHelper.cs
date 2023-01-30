@@ -77,11 +77,38 @@ namespace DirectoryServices.Helpers
 
             try
             {
+                user.FirstName = (string?)(directoryEntry.Properties["givenName"]?.Value);
+            }
+            catch (Exception exception)
+            {
+                _logger.LogWarning("Exception occurred parsing givenName for user {user} {exception}", directoryEntry.Name, exception);
+            }
+
+            try
+            {
+                user.LastName = (string?)(directoryEntry.Properties["sn"]?.Value);
+            }
+            catch (Exception exception)
+            {
+                _logger.LogWarning("Exception occurred parsing sn for user {user} {exception}", directoryEntry.Name, exception);
+            }
+
+            try
+            {
                 user.Name = (string?)(directoryEntry.Properties["name"]?.Value);
             }
             catch (Exception exception)
             {
                 _logger.LogWarning("Exception occurred parsing name for user {user} {exception}", directoryEntry.Name, exception);
+            }
+
+            try
+            {
+                user.DisplayName = (string?)(directoryEntry.Properties["displayName"]?.Value);
+            }
+            catch (Exception exception)
+            {
+                _logger.LogWarning("Exception occurred parsing displayName for user {user} {exception}", directoryEntry.Name, exception);
             }
 
             try
