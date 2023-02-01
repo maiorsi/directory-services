@@ -2,9 +2,15 @@
 
   <PropertyGroup>
     <AssemblyName>DirectoryServices</AssemblyName>
+    <OutputType>Dll</OutputType>
     <TargetFramework>netstandard2.1</TargetFramework>
     <RootNamespace>DirectoryServices</RootNamespace>
     <Nullable>enable</Nullable>
+    <PackageId>DirectoryServices</PackageId>
+    <Version>0.1.0</Version>
+    <Authors>Maiorsi</Authors>
+    <PackageDescription>DotNet Directory Services Library - A convenience wrapper over LDAP</PackageDescription>
+    <RepositoryUrl>https://github.com/maiorsi/directory-services</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
