@@ -1,3 +1,5 @@
+[![.NET](https://github.com/maiorsi/directory-services/actions/workflows/dotnet.yml/badge.svg)](https://github.com/maiorsi/directory-services/actions/workflows/dotnet.yml)
+
 # directory-services
 
 DotNet Directory Services Library
