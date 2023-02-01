@@ -52,15 +52,12 @@ public class DirectoryServiceTests
     [Fact]
     public void TestFromLdapResult()
     {
-        var mockLogger = Mock.Of<ILogger<LdapHelper>>();
-        var ldapHelper = new LdapHelper(mockLogger);
+        var mockLogger = Mock.Of<ILogger<NovellDirectoryService>>();
+        var ldapHelper = new NovellHelper(mockLogger);
 
         var mockLdapEntry = new Mock<LdapEntry>(DistinguishedName, GetAttributeSet()).Object;
-        var mockLdapResult = Mock.Of<LdapResult>();
 
-        mockLdapResult.LdapEntry = mockLdapEntry;
-
-        var user = ldapHelper.FromLdapResult(mockLdapResult);
+        var user = ldapHelper.FromLdapEntry(mockLdapEntry);
 
         Assert.Equivalent(GetExpectedUser(), user);
     }

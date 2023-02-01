@@ -19,7 +19,7 @@ using Microsoft.Extensions.Options;
 
 namespace DirectoryServices.Impl
 {
-    public class ActiveDirectoryService : IBaseDirectoryService
+    public class ActiveDirectoryService : BaseDirectoryService
     {
         private readonly ILogger<ActiveDirectoryService> _logger;
 
@@ -76,7 +76,7 @@ namespace DirectoryServices.Impl
         /// <inheritdoc />
         public override IReadOnlyCollection<Group> GetAncestors(string distinguishedName, string? ancestorSearchBase = null)
         {
-            var sanitisedDN = sanitisedDistinguishedName(distinguishedName);
+            var sanitisedDN = SanitiseDistinguishedName(distinguishedName, _directorySettings);
 
             var query = string.Format(LDAP_MEMBER, sanitisedDN);
 
@@ -86,7 +86,7 @@ namespace DirectoryServices.Impl
         /// <inheritdoc />
         public override IReadOnlyCollection<User> GetMembers(string distinguishedName, string? memberSearchBase = null)
         {
-            var sanitisedDN = sanitisedDistinguishedName(distinguishedName);
+            var sanitisedDN = SanitiseDistinguishedName(distinguishedName, _directorySettings);
 
             var query = string.Format(LDAP_MEMBER_OF, sanitisedDN);
 
@@ -217,16 +217,6 @@ namespace DirectoryServices.Impl
             }
 
             return null;
-        }
-
-        private object sanitisedDistinguishedName(string distinguishedName)
-        {
-            foreach (var keyPair in _directorySettings.DistinguishedNameEscapeCharacters)
-            {
-                distinguishedName = distinguishedName.Replace(keyPair.Key, keyPair.Value);
-            }
-
-            return distinguishedName.Trim();
         }
     }
 }
