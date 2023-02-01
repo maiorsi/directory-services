@@ -8,7 +8,10 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Security.Principal;
 
+<<<<<<< HEAD
 using DirectoryServices.Impl;
+=======
+>>>>>>> 1013192 (Rebase1)
 using DirectoryServices.Models;
 
 using Microsoft.Extensions.Logging;
