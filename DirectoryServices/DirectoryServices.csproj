@@ -10,7 +10,7 @@
     <Version>0.1.0</Version>
     <Authors>Maiorsi</Authors>
     <PackageDescription>DotNet Directory Services Library - A convenience wrapper over LDAP</PackageDescription>
-    <RepositoryUrl>https://github.com/maiorsi/directory-services</RepositoryUrl>
+    <RepositoryUrl>https://github.com/maiorsi/directory-services/packages</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
