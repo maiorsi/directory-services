@@ -64,10 +64,10 @@ jobs:
         name: nugetPackage
 
     - name: Prep packages
-      run: 
-        - dotnet nuget add source --username maiorsi --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/maiorsi/index.json"
-        - dotnet nuget disable source github
-        - dotnet nuget enable source github
+      run: |
+        dotnet nuget add source --username maiorsi --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github "https://nuget.pkg.github.com/maiorsi/index.json"
+        dotnet nuget disable source github
+        dotnet nuget enable source github
       
 
     - name: Push package to GitHub packages 
