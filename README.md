@@ -13,7 +13,9 @@ dotnet build
 
 ## Usage
 
-### App Settings
+### Usage
+
+#### App Settings
 ```json
 {
     "Ldap": {
@@ -29,6 +31,28 @@ dotnet build
         "LdapFollowReferrals": true,
         "LdapKerberosBind": false,
         "LdapSecure": false
+    }
+}
+```
+
+#### Dependency Injection
+```c#
+// Part 1 - Add to services container
+services.AddSingleton<IDirectoyService, NovellDirectoryService>();
+
+// Part 2 - Use
+public class UsersController : ControllerBase
+{
+    private readonly IDirectoryService _directoryService;
+
+    public UsersController(IDirectoryService directoryService)
+    {
+        _directorService = directoryService ?? throw new ArgumentNullException(nameof(directorService));
+    }
+
+    private TestMethod()
+    {
+        var user = _directoryService.SearchUserBySid("S-1-5....");
     }
 }
 ```

@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "directory-services", "DirectoryServices\directory-services.csproj", "{747B21BD-78DC-4767-99C4-C796407DCDB8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryServices", "DirectoryServices\DirectoryServices.csproj", "{747B21BD-78DC-4767-99C4-C796407DCDB8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "directory-services-tests", "DirectoryServices.Tests\directory-services-tests.csproj", "{80926FA6-67F6-4646-8B7B-D8CF68402A89}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryServices.Tests", "DirectoryServices.Tests\DirectoryServices.Tests.csproj", "{80926FA6-67F6-4646-8B7B-D8CF68402A89}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
