@@ -5,10 +5,10 @@ name: Build & Release
 
 on:
   push:
-    branches: [ "main" ]
-    tags: ['v*']
+    branches: ["main"]
+    tags: ["v*"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 permissions:
   packages: write
@@ -18,60 +18,61 @@ env:
 
 jobs:
   build:
-    runs-on: ubuntu-latest    
-    outputs: 
+    runs-on: ubuntu-latest
+    outputs:
       Version: ${{ steps.gitversion.outputs.SemVer }}
-      CommitsSinceVersionSource: ${{ steps.gitversion.outputs.CommitsSinceVersionSource }} 
+      FullVersion: ${{ steps.gitversion.outputs.FullSemVer }}
+      CommitsSinceVersionSource: ${{ steps.gitversion.outputs.CommitsSinceVersionSource }}
 
     steps:
-    - uses: actions/checkout@v2
-      with:
-        fetch-depth: 0 #fetch-depth is needed for GitVersion
-        
-    #Install and calculate the new version with GitVersion  
-    - name: Install GitVersion
-      uses: gittools/actions/gitversion/setup@v0.9.7
-      with:
-        versionSpec: 5.x
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0 #fetch-depth is needed for GitVersion
 
-    - name: Determine Version
-      uses: gittools/actions/gitversion/execute@v0.9.7
-      id: gitversion # step id used as reference for output values
+      #Install and calculate the new version with GitVersion
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0.9.7
+        with:
+          versionSpec: 5.x
 
-    - name: Display GitVersion outputs
-      run: |
-        echo "Version: ${{ steps.gitversion.outputs.SemVer }}"
-        echo "CommitsSinceVersionSource: ${{ steps.gitversion.outputs.CommitsSinceVersionSource }}"
-    
-    #Build/pack the project
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 7.0.x
+      - name: Determine Version
+        uses: gittools/actions/gitversion/execute@v0.9.7
+        id: gitversion # step id used as reference for output values
 
-    - name: Build and Pack NuGet package
-      run: dotnet pack DirectoryServices/DirectoryServices.csproj -p:Version='${{ steps.gitversion.outputs.SemVer }}' -c Release
+      - name: Display GitVersion outputs
+        run: |
+          echo "Version: ${{ steps.gitversion.outputs.SemVer }}"
+          echo "CommitsSinceVersionSource: ${{ steps.gitversion.outputs.CommitsSinceVersionSource }}"
 
-    - name: Upload NuGet package to GitHub
-      uses: actions/upload-artifact@v2
-      with:
-        name: nugetPackage
-        path: DirectoryServices/bin/Release/ 
-        
+      #Build/pack the project
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 7.0.x
+
+      - name: Build and Pack NuGet package
+        run: dotnet pack DirectoryServices/DirectoryServices.csproj -p:Version='${{ steps.gitversion.outputs.SemVer }}' -c Release
+
+      - name: Upload NuGet package to GitHub
+        uses: actions/upload-artifact@v2
+        with:
+          name: nugetPackage
+          path: DirectoryServices/bin/Release/
+
   release:
-    runs-on: ubuntu-latest    
+    runs-on: ubuntu-latest
+    if: needs.build.outputs.FullVersion == needs.build.outputs.Version
     needs: build
-    
-    steps:  
-    #Push NuGet package to GitHub packages
-    - name: Download nuget package artifact
-      uses: actions/download-artifact@v1.0.0
-      with:
-        name: nugetPackage
 
-    - name: Prep packages
-      run: dotnet nuget add source --username maiorsi --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github ${{ env.REGISTRY }}
+    steps:
+      #Push NuGet package to GitHub packages
+      - name: Download nuget package artifact
+        uses: actions/download-artifact@v1.0.0
+        with:
+          name: nugetPackage
 
-    - name: Push package to GitHub packages 
-      if: needs.build.outputs.CommitsSinceVersionSource == 0 #Only release if there has been a commit/version change  
-      run: dotnet nuget push nugetPackage/*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }}  --source "github" --skip-duplicate
+      - name: Prep packages
+        run: dotnet nuget add source --username maiorsi --password ${{ secrets.GITHUB_TOKEN }} --store-password-in-clear-text --name github ${{ env.REGISTRY }}
+
+      - name: Push package to GitHub packages
+        run: dotnet nuget push nugetPackage/*.nupkg --api-key ${{ secrets.GITHUB_TOKEN }}  --source "github" --skip-duplicate
