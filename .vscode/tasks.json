@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/DirectoryServices.Tests/directory-services-tests.csproj",
+                "${workspaceFolder}/DirectoryServices.Tests/DirectoryServices.Tests.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -19,7 +19,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/DirectoryServices.Tests/directory-services-tests.csproj",
+                "${workspaceFolder}/DirectoryServices.Tests/DirectoryServices.Tests.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -33,7 +33,7 @@
                 "watch",
                 "run",
                 "--project",
-                "${workspaceFolder}/DirectoryServices.Tests/directory-services-tests.csproj"
+                "${workspaceFolder}/DirectoryServices.Tests/DirectoryServices.Tests.csproj"
             ],
             "problemMatcher": "$msCompile"
         },
