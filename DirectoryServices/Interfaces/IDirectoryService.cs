@@ -49,6 +49,15 @@ namespace DirectoryServices.Interfaces
         User? SearchUserBySid(string sid, string? ancestorSearchBase = null, bool includeAncestors = false);
 
         /// <summary>
+        /// Search LDAP for a single user based on a Guid.
+        /// </summary>
+        /// <param name="guid">Guid string representation</param>
+        /// <param name="ancestorSearchBase">Optional: search base dn for searching groups</param>
+        /// <param name="includeAncestors">Optional: Include ancestor groups with returned objects</param>
+        /// <returns>A single user or null for no user</returns>
+        User? SearchUserByGuid(string guid, string? ancestorSearchBase = null, bool includeAncestors = false);
+
+        /// <summary>
         /// Search LDAP for a single group.
         /// based on a Secure Identifier (SId)
         /// </summary>
@@ -59,6 +68,18 @@ namespace DirectoryServices.Interfaces
         /// <param name="includeAncestors">Optional: Include ancestor groups with returned objects</param>
         /// <returns>A single group or null for no group</returns>
         Group? SearchGroupBySid(string sid, string? memberSearchBase = null, string? ancestorSearchBase = null, bool includeMembers = false, bool includeAncestors = false);
+
+        /// <summary>
+        /// Search LDAP for a single group.
+        /// based on a Guid
+        /// </summary>
+        /// <param name="guid">Guid string representation</param>
+        /// <param name="memberSearchBase">Optional: search base dn for searching users</param>
+        /// <param name="ancestorSearchBase">Optional: search base dn for searching groups</param>
+        /// <param name="includeMembers">Optional: Include members with returned objects</param>
+        /// <param name="includeAncestors">Optional: Include ancestor groups with returned objects</param>
+        /// <returns>A single group or null for no group</returns>
+        Group? SearchGroupByGuid(string guid, string? memberSearchBase = null, string? ancestorSearchBase = null, bool includeMembers = false, bool includeAncestors = false);
 
         /// <summary>
         /// Search LDAP for all ancestor groups for an LDAP object based on a DN.

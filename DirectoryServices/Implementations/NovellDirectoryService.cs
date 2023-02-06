@@ -59,7 +59,7 @@ namespace DirectoryServices.Impl
 
         public override Group? SearchGroupBySid(string sid, string? memberSearchBase = null, string? ancestorSearchBase = null, bool includeMembers = false, bool includeAncestors = false)
         {
-            var query = string.Format(LDAP_SID, sid);
+            var query = string.Format(LDAP_SID, GetOctetStringRepresentation(SecureIdentifierHelper.Encode(sid)));
 
             var groups = GetGroups(query, PAGE_ONE, SINGLE_LIMIT, searchBase: null);
 
@@ -114,7 +114,7 @@ namespace DirectoryServices.Impl
 
         public override User? SearchUserBySid(string sid, string? ancestorSearchBase = null, bool includeAncestors = false)
         {
-            var query = string.Format(LDAP_SID, sid);
+            var query = string.Format(LDAP_SID, GetOctetStringRepresentation(SecureIdentifierHelper.Encode(sid)));
 
             var users = GetUsers(query, PAGE_ONE, SINGLE_LIMIT);
 
@@ -258,6 +258,65 @@ namespace DirectoryServices.Impl
             connection.Bind(_directorySettings.BindDistinguishedName, _directorySettings.BindPassword);
 
             return connection.Search(rootEntry, LdapConnection.ScopeSub, query, propertiesToLoad, false, ldapSearchConstraints);
+        }
+
+        public override User? SearchUserByGuid(string guid, string? ancestorSearchBase = null, bool includeAncestors = false)
+        {
+            var query = string.Format(LDAP_GUID, GetOctetStringRepresentation(GuidHelper.Encode(guid)));
+
+            var users = GetUsers(query, PAGE_ONE, SINGLE_LIMIT);
+
+            if (users.Count == 1)
+            {
+                var user = users.First();
+
+                if (includeAncestors)
+                {
+                    user.Groups = GetAncestors(user.DistinguishedName, ancestorSearchBase).Select(_ => new { Key = _.Sid, Value = _ }).ToDictionary(_ => _.Key, _ => _.Value);
+                }
+
+                return user;
+            }
+            else if (users.Count > 1)
+            {
+                throw new MultipleResultsException($"Multiple results returned for query: '{query}'!");
+            }
+            else
+            {
+                throw new NoResultsException($"No results returned for query: '{query}'!");
+            }
+        }
+
+        public override Group? SearchGroupByGuid(string guid, string? memberSearchBase = null, string? ancestorSearchBase = null, bool includeMembers = false, bool includeAncestors = false)
+        {
+            var query = string.Format(LDAP_GUID, GetOctetStringRepresentation(GuidHelper.Encode(guid)));
+
+            var groups = GetGroups(query, PAGE_ONE, SINGLE_LIMIT, searchBase: null);
+
+            if (groups.Count == 1)
+            {
+                var group = groups.First();
+
+                if (includeMembers)
+                {
+                    group.Members = GetMembers(group.DistinguishedName, memberSearchBase).Select(_ => new { Key = _.Sid, Value = _ }).ToDictionary(_ => _.Key, _ => _.Value);
+                }
+
+                if (includeAncestors)
+                {
+                    group.Ancestors = GetAncestors(group.DistinguishedName, ancestorSearchBase).Select(_ => new { Key = _.Sid, Value = _ }).ToDictionary(_ => _.Key, _ => _.Value);
+                }
+
+                return group;
+            }
+            else if (groups.Count > 1)
+            {
+                throw new MultipleResultsException($"Multiple results returned for query: '{query}'!");
+            }
+            else
+            {
+                throw new NoResultsException($"No results returned for query: '{query}'!");
+            }
         }
     }
 }

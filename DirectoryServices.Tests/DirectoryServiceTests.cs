@@ -24,6 +24,7 @@ public class DirectoryServiceTests
     private const string DistinguishedName = "CN=Test\\ User\\ 1";
     private const string BinaryObjectSid = "AQQAAAAAAAUVAAAAwdFKz9WmazDFb3Y8";
     private const string BinaryObjectGuid = "9eLQGLjeDE6kgxMT1ghj+g==";
+    private const string BinaryObjectGuidOctetString = "\\F5\\E2\\D0\\18\\B8\\DE\\0C\\4E\\A4\\83\\13\\13\\D6\\08\\63\\FA";
     private const string Username = "testuser1";
     private const string SidString = "S-1-5-21-3477787073-812361429-1014394821";
     private const string GuidString = "18d0e2f5-deb8-4e0c-a483-1313d60863fa";
@@ -60,6 +61,16 @@ public class DirectoryServiceTests
         var user = ldapHelper.FromLdapEntry(mockLdapEntry);
 
         Assert.Equivalent(GetExpectedUser(), user);
+    }
+
+    [Fact]
+    public void TestOctetStringRepresentation()
+    {
+        byte[] bytes = Convert.FromBase64String(BinaryObjectGuid);
+
+        var octetString = ActiveDirectoryService.GetOctetStringRepresentation(bytes);
+
+        Assert.Equivalent(BinaryObjectGuidOctetString, octetString);
     }
 
     private User GetExpectedUser()

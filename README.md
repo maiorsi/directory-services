@@ -1,6 +1,6 @@
 [![.NET](https://github.com/maiorsi/directory-services/actions/workflows/dotnet.yml/badge.svg)](https://github.com/maiorsi/directory-services/actions/workflows/dotnet.yml)
 
-# directory-services
+# Directory Services
 
 DotNet Directory Services Library
 
@@ -13,7 +13,7 @@ dotnet restore
 dotnet build
 ```
 
-## Usage
+## Getting Started
 
 ### Usage
 
@@ -41,6 +41,9 @@ dotnet build
 ```c#
 // Part 1 - Add to services container
 services.AddSingleton<IDirectoyService, NovellDirectoryService>();
+
+// OR
+services.AddSingleton<IDirectoyService, ActiveDirectoryService>();
 
 // Part 2 - Use
 public class UsersController : ControllerBase
