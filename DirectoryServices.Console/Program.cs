@@ -39,7 +39,7 @@ internal class Program
             Console.WriteLine("Enter a binary (base64) encoded SId string...");
 
             var base64 = Console.ReadLine();
-            var bytes = Convert.FromBase64String();
+            var bytes = Convert.FromBase64String(base64);
             var decoded = SecureIdentifierHelper.Decode(bytes);
 
             Console.WriteLine(decoded);
@@ -50,7 +50,7 @@ internal class Program
             Console.WriteLine("Enter a binary (base64) encoded Guid string...");
 
             var base64 = Console.ReadLine();
-            var bytes = Convert.FromBase64String();
+            var bytes = Convert.FromBase64String(base64);
             var decoded = GuidHelper.Decode(bytes);
 
             Console.WriteLine(decoded);
