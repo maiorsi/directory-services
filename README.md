@@ -4,6 +4,12 @@
 
 DotNet Directory Services Library
 
+This library provides a convenience wrapper of LDAP queries from C# including the following:
+* Search by SID (objectSid - S-1-5...)
+* Search By Guid (objectGUID)
+* Active Directory Implementation (windows deployment/usage only as it relies on [System.DirectoryServices](https://learn.microsoft.com/en-us/dotnet/api/system.directoryservices?view=dotnet-plat-ext-7.0))
+* [Novell LDAP Implementation](https://github.com/dsbenghe/Novell.Directory.Ldap.NETStandard) (cross platform)
+
 ## Installation
 
 Use the DotNet CLI package manager [dotnet](https://learn.microsoft.com/en-us/dotnet/core/tools/) to build the project.
@@ -57,7 +63,8 @@ public class UsersController : ControllerBase
 
     private TestMethod()
     {
-        var user = _directoryService.SearchUserBySid("S-1-5....");
+        var userBySid = _directoryService.SearchUserBySid("S-1-5....");
+        var userByGuid = _directoryService.SearchUserByGuid("12345-aedgf234...");
     }
 }
 ```
