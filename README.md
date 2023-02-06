@@ -1,4 +1,4 @@
-[![.NET](https://github.com/maiorsi/directory-services/actions/workflows/dotnet.yml/badge.svg)](https://github.com/maiorsi/directory-services/actions/workflows/dotnet.yml)
+[![Build & Release](https://github.com/maiorsi/directory-services/actions/workflows/workflow.yml/badge.svg)](https://github.com/maiorsi/directory-services/actions/workflows/workflow.yml)
 
 # Directory Services
 
