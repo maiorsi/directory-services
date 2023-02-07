@@ -1,0 +1,46 @@
+﻿@page "/guid"
+
+@using DirectoryServices.Helpers
+
+<PageTitle>Guids</PageTitle>
+
+<h1>Guids</h1>
+
+<input @bind="guidStringInputValue" size="50" />&nbsp;
+<button class="btn btn-primary" @onclick="EncodeGuid">Encode Guid</button>&nbsp;
+<p>@outputBinaryGuid</p>
+
+<input @bind="binaryGuidInputValue" size="50" />&nbsp;
+<button class="btn btn-primary" @onclick="DecodeGuid">Decode Binary Guid</button>&nbsp;
+<p>@outputGuidString</p>
+
+@code {
+    private string? guidStringInputValue;
+    private string? binaryGuidInputValue;
+    private string? outputBinaryGuid;
+    private string? outputGuidString;
+
+    private void EncodeGuid()
+    {
+        outputBinaryGuid = Encode(guidStringInputValue);
+    }
+
+    private void DecodeGuid()
+    {
+        outputGuidString = Decode(binaryGuidInputValue);
+    }
+
+    private string? Encode(string? guid)
+    {
+        var bytes = GuidHelper.Encode(guid);
+
+        return Convert.ToBase64String(bytes);
+    }
+
+    private string? Decode(string? base64BinaryGuid)
+    {
+        var bytes = Convert.FromBase64String(base64BinaryGuid ?? string.Empty);
+
+        return GuidHelper.Decode(bytes);
+    }
+}
