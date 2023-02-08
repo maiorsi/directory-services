@@ -10,7 +10,9 @@ This library provides a convenience wrapper of LDAP queries from C# including th
 * Active Directory Implementation (windows deployment/usage only as it relies on [System.DirectoryServices](https://learn.microsoft.com/en-us/dotnet/api/system.directoryservices?view=dotnet-plat-ext-7.0))
 * [Novell LDAP Implementation](https://github.com/dsbenghe/Novell.Directory.Ldap.NETStandard) (cross platform)
 
-## Installation
+## Getting Started
+
+### Installation
 
 Use the DotNet CLI package manager [dotnet](https://learn.microsoft.com/en-us/dotnet/core/tools/) to build the project.
 
@@ -18,8 +20,6 @@ Use the DotNet CLI package manager [dotnet](https://learn.microsoft.com/en-us/do
 dotnet restore
 dotnet build
 ```
-
-## Getting Started
 
 ### Usage
 
