@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryServices", "Direct
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryServices.Tests", "DirectoryServices.Tests\DirectoryServices.Tests.csproj", "{80926FA6-67F6-4646-8B7B-D8CF68402A89}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DirectoryServices.Web", "DirectoryServices.Web\DirectoryServices.Web.csproj", "{C1A4A9B2-5675-41EF-A80F-4756820D31DC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,5 +30,9 @@ Global
 		{80926FA6-67F6-4646-8B7B-D8CF68402A89}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{80926FA6-67F6-4646-8B7B-D8CF68402A89}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{80926FA6-67F6-4646-8B7B-D8CF68402A89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C1A4A9B2-5675-41EF-A80F-4756820D31DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C1A4A9B2-5675-41EF-A80F-4756820D31DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C1A4A9B2-5675-41EF-A80F-4756820D31DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C1A4A9B2-5675-41EF-A80F-4756820D31DC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
