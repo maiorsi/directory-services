@@ -1,4 +1,4 @@
-[![Build & Release](https://github.com/maiorsi/directory-services/actions/workflows/workflow.yml/badge.svg)](https://github.com/maiorsi/directory-services/actions/workflows/workflow.yml)
+[![Build & Release](https://github.com/maiorsi/directory-services/actions/workflows/build-and-release.yml/badge.svg?branch=main)](https://github.com/maiorsi/directory-services/actions/workflows/build-and-release.yml)
 
 # Directory Services
 
