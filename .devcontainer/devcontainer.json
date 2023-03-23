@@ -1,5 +1,16 @@
 {
-  "image": "mcr.microsoft.com/devcontainers/dotnet:7.0-bullseye",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
   "features": {
+    "ghcr.io/devcontainers/features/docker-in-docker:1": {}
+  },
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-dotnettools.csharp",
+        "ms-vscode.makefile-tools"
+      ]
+    }
   }
 }
