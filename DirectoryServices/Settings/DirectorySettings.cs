@@ -41,7 +41,8 @@ namespace DirectoryServices.Settings
         }
         public string? LdapConnectionFallback { get; set; }
         public string? LdapConnectionOverride { get; set; }
-        public string? LdapConnectionUrl { get; set; }
+        public string? LdapConnectionServer { get; set; }
+        public int LdapConnectionPort { get; set; }
         public bool LdapFollowReferrals { get; set; }
         public bool LdapKerberosBind { get; set; }
         public bool LdapSecure { get; set; }

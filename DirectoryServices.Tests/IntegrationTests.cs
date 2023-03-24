@@ -1,12 +1,10 @@
-using System.Text.Json;
-
 using DirectoryServices.Impl;
+using DirectoryServices.Interfaces;
 using DirectoryServices.Settings;
 
 using DotNet.Testcontainers.Builders;
 using DotNet.Testcontainers.Containers;
 
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
 using Moq;
@@ -19,6 +17,7 @@ public class IntegrationTests : IAsyncLifetime, IDisposable
     private const ushort HOST_LDAP_PORT = 10389;
 
     private const string USER_QUERY = "(cn=*)";
+    private const string SAMPLE_USER_GUID = "18d0e2f5-deb8-4e0c-a483-1313d60863fc";
 
     private readonly CancellationTokenSource _cts = new(TimeSpan.FromMinutes(1));
     private readonly IContainer _ldapContainer;
@@ -31,11 +30,12 @@ public class IntegrationTests : IAsyncLifetime, IDisposable
         DistinguishedNameEscapeCharactersString = "\\,:\\5C\\2C|\\*:\\5C\\2A|\\(:\\5C\\28|\\):\\5C\\29|\\\\:\\5C\\5C",
         LdapConnectionFallback = "ldap://127.0.0.1:389",
         LdapConnectionOverride = "",
-        LdapConnectionUrl = "127.0.0.1",
+        LdapConnectionServer = "127.0.0.1",
+        LdapConnectionPort = 389,
         LdapFollowReferrals = true,
         LdapKerberosBind = false,
         LdapSecure = false,
-        PageSize = 1000,
+        PageSize = -1,
         Threads = 4
     };
 
@@ -45,8 +45,8 @@ public class IntegrationTests : IAsyncLifetime, IDisposable
             .WithImage("ghcr.io/maiorsi/ldap-test-server:0.2")
             .WithImagePullPolicy((_) => true)
             .WithExposedPort(LDAP_PORT)
-            .WithPortBinding(LDAP_PORT, LDAP_PORT)
-            .WithWaitStrategy(Wait.ForUnixContainer().UntilContainerIsHealthy())
+            .WithPortBinding(LDAP_PORT, true)
+            .WithWaitStrategy(Wait.ForUnixContainer().UntilContainerIsHealthy(5))
             .Build();
     }
 
@@ -68,18 +68,33 @@ public class IntegrationTests : IAsyncLifetime, IDisposable
     [Fact]
     public void TestSearchUsersByLdapQuery()
     {
-        var serviceProvider = new ServiceCollection()
-            .AddLogging(builder => builder.AddConsole(option => option.LogToStandardErrorThreshold = LogLevel.Trace))
-            .BuildServiceProvider();
+        var hostPort = _ldapContainer.GetMappedPublicPort(LDAP_PORT);
 
-        var factory = serviceProvider.GetService<ILoggerFactory>();
+        _directorySettings.LdapConnectionPort = hostPort;
 
-        var logger = factory?.CreateLogger<NovellDirectoryService>();
+        var mockLogger = Mock.Of<ILogger<NovellDirectoryService>>();
 
-        var directoryService = new NovellDirectoryService(logger!, _directorySettings);
+        var directoryService = new NovellDirectoryService(mockLogger, _directorySettings);
 
-        var users = directoryService.SearchUsersByLdapQuery(USER_QUERY, 1, 10);
+        var users = directoryService.SearchUsersByLdapQuery(USER_QUERY, 0, 10);
 
-        Console.Out.WriteLine($"Users returned: {users.Count}");
+        // There are 9 users in the test ldap directory
+        Assert.Equivalent(9, users.Count);
+    }
+
+    [Fact]
+    public void SearchUserByGuid()
+    {
+        var hostPort = _ldapContainer.GetMappedPublicPort(LDAP_PORT);
+
+        _directorySettings.LdapConnectionPort = hostPort;
+
+        var mockLogger = Mock.Of<ILogger<NovellDirectoryService>>();
+
+        var directoryService = new NovellDirectoryService(mockLogger, _directorySettings);
+
+        var user = directoryService.SearchUserByGuid(SAMPLE_USER_GUID);
+
+        Console.Out.WriteLine(user);
     }
 }

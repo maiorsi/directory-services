@@ -248,12 +248,16 @@ namespace DirectoryServices.Impl
             var rootEntry = searchBase;
 
             connection.SecureSocketLayer = _directorySettings.LdapSecure;
-            connection.Connect(_directorySettings.LdapConnectionUrl, _directorySettings.LdapSecure ? LdapConnection.DefaultSslPort : LdapConnection.DefaultPort);
+            connection.Connect(_directorySettings.LdapConnectionServer, _directorySettings.LdapConnectionPort);
 
             var ldapSearchConstraints = new LdapSearchConstraints();
 
             ldapSearchConstraints.ReferralFollowing = _directorySettings.LdapFollowReferrals;
-            ldapSearchConstraints.AddPagination(page, pageSize);
+
+            if (_directorySettings.PageSize > 0)
+            {
+                ldapSearchConstraints.AddPagination(page, pageSize);
+            }
 
             connection.Bind(_directorySettings.BindDistinguishedName, _directorySettings.BindPassword);
 
