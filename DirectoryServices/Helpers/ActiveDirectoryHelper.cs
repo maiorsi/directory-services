@@ -51,6 +51,15 @@ namespace DirectoryServices.Helpers
 
             try
             {
+                user.CommonName = (string?)(directoryEntry.Properties["cn"]?.Value);
+            }
+            catch (Exception exception)
+            {
+                _logger.LogWarning("Exception occurred parsing cn for user {user} {exception}", directoryEntry.Name, exception);
+            }
+
+            try
+            {
                 user.DistinguishedName = (string?)(directoryEntry.Properties["distinguishedName"]?.Value);
             }
             catch (Exception exception)

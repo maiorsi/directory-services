@@ -116,13 +116,32 @@ namespace DirectoryServices.Helpers
 
                 try
                 {
+                    if (attributes.ContainsKey("cn"))
+                    {
+                        user.CommonName = attributes["cn"]?.StringValue;
+                    }
+                    else
+                    {
+                        _logger.LogDebug("Failed to find cn attribute for user {user}", ldapEntry?.Dn);
+                    }
+                }
+                catch (Exception exception)
+                {
+                    _logger.LogWarning("Exception occurred parsing cn for user {user} {exception}", ldapEntry?.Dn, exception);
+                }
+
+                try
+                {
                     if (attributes.ContainsKey("distinguishedName"))
                     {
                         user.DistinguishedName = attributes["distinguishedName"]?.StringValue;
                     }
                     else
                     {
-                        _logger.LogDebug("Failed to find distinguishedName attribute for user {user}", ldapEntry?.Dn);
+                        // Simply use the ldap entry's DN
+                        user.DistinguishedName = ldapEntry?.Dn;
+
+                        _logger.LogDebug("Failed to find distinguishedName attribute for user {user} - Setting via ldap entry dn.", ldapEntry?.Dn);
                     }
                 }
                 catch (Exception exception)
@@ -278,12 +297,31 @@ namespace DirectoryServices.Helpers
 
                 try
                 {
+                    if (attributes.ContainsKey("cn"))
+                    {
+                        group.CommonName = attributes["cn"]?.StringValue;
+                    }
+                    else
+                    {
+                        _logger.LogDebug("Failed to find cn attribute for group {group}", ldapEntry?.Dn);
+                    }
+                }
+                catch (Exception exception)
+                {
+                    _logger.LogWarning("Exception occurred parsing cn for group {group} {exception}", ldapEntry?.Dn, exception);
+                }
+
+                try
+                {
                     if (attributes.ContainsKey("distinguishedName"))
                     {
                         group.DistinguishedName = attributes["distinguishedName"]?.StringValue;
                     }
                     else
                     {
+                        // Simply use the ldap entry's DN
+                        group.DistinguishedName = ldapEntry?.Dn;
+
                         _logger.LogDebug("Failed to find distinguishedName attribute for group {group}", ldapEntry?.Dn);
                     }
                 }

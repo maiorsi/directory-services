@@ -24,6 +24,7 @@ namespace DirectoryServices.Interfaces
 
         internal readonly string[] _userProperties = new string[]
         {
+            "cn",
             "displayName",
             "distinguishedName",
             "givenName",
@@ -43,6 +44,7 @@ namespace DirectoryServices.Interfaces
 
         internal readonly string[] _groupProperties = new string[]
         {
+            "cn",
             "distinguishedName",
             "objectGUID",
             "objectSid",

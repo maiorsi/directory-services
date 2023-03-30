@@ -6,9 +6,10 @@ namespace DirectoryServices.Models
 {
     public abstract class LdapEntity
     {
-        public string? Sid { get; set; }
-        public string? Guid { get; set; }
+        public string? CommonName { get; set; }
         public string? DistinguishedName { get; set; }
+        public string? Guid { get; set; }
         public string? Name { get; set; }
+        public string? Sid { get; set; }
     }
 }

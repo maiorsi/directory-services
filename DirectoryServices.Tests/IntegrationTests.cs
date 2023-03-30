@@ -1,3 +1,5 @@
+using System.Text.Json;
+
 using DirectoryServices.Impl;
 using DirectoryServices.Models;
 using DirectoryServices.Settings;
@@ -20,6 +22,7 @@ public class IntegrationTests : IAsyncLifetime, IDisposable
     private const string USER_QUERY = "(cn=*)";
     private readonly User SAMPLE_USER = new User
     {
+        CommonName = "Philip J. Fry",
         DisplayName = "Fry",
         DistinguishedName = "cn=Philip J. Fry,ou=people,dc=planetexpress,dc=com",
         Email = "fry@planetexpress.com",
@@ -30,6 +33,15 @@ public class IntegrationTests : IAsyncLifetime, IDisposable
         Uid = "fry",
         Username = null
     };
+
+    private readonly Group SAMPLE_GROUP = new Group
+    {
+        CommonName = "ship_crew",
+        DistinguishedName = "cn=ship_crew,ou=people,dc=planetexpress,dc=com",
+        Guid = "18d0e2f5-deb8-4e0c-a483-1313d6086313",
+        Sid = "S-1-5-21-3477787073-812361429-1014394829",
+    };
+
     private readonly CancellationTokenSource _cts = new(TimeSpan.FromMinutes(1));
     private readonly IContainer _ldapContainer;
     private readonly ITestOutputHelper _testOutputHelper;
@@ -103,12 +115,63 @@ public class IntegrationTests : IAsyncLifetime, IDisposable
 
         _directorySettings.LdapConnectionPort = hostPort;
 
-        var mockLogger = Mock.Of<ILogger<NovellDirectoryService>>();
+        var logger = _testOutputHelper.BuildLoggerFor<NovellDirectoryService>();
 
-        var directoryService = new NovellDirectoryService(mockLogger, _directorySettings);
+        var directoryService = new NovellDirectoryService(logger, _directorySettings);
 
         var user = directoryService.SearchUserByGuid(SAMPLE_USER.Guid!);
 
         Assert.Equivalent(SAMPLE_USER, user);
+    }
+
+    [Fact]
+    public void SearchUserBySid()
+    {
+        var hostPort = _ldapContainer.GetMappedPublicPort(LDAP_PORT);
+
+        _directorySettings.LdapConnectionPort = hostPort;
+
+        var logger = _testOutputHelper.BuildLoggerFor<NovellDirectoryService>();
+
+        var directoryService = new NovellDirectoryService(logger, _directorySettings);
+
+        var user = directoryService.SearchUserBySid(SAMPLE_USER.Sid!);
+
+        Assert.Equivalent(SAMPLE_USER, user);
+    }
+
+    [Fact]
+    public void SearchGroupByGuid()
+    {
+        var hostPort = _ldapContainer.GetMappedPublicPort(LDAP_PORT);
+
+        _directorySettings.LdapConnectionPort = hostPort;
+
+        var logger = _testOutputHelper.BuildLoggerFor<NovellDirectoryService>();
+
+        var directoryService = new NovellDirectoryService(logger, _directorySettings);
+
+        var group = directoryService.SearchGroupByGuid(SAMPLE_GROUP.Guid!);
+
+        Assert.Equivalent(SAMPLE_GROUP, group);
+    }
+
+
+    [Fact]
+    public void SearchGroupByGuidWithMembers()
+    {
+        var hostPort = _ldapContainer.GetMappedPublicPort(LDAP_PORT);
+
+        _directorySettings.LdapConnectionPort = hostPort;
+
+        var logger = _testOutputHelper.BuildLoggerFor<NovellDirectoryService>();
+
+        var directoryService = new NovellDirectoryService(logger, _directorySettings);
+
+        var group = directoryService.SearchGroupByGuid(SAMPLE_GROUP.Guid!, includeMembers: true);
+
+        Console.Out.WriteLine(JsonSerializer.Serialize(group));
+
+        Assert.Equivalent(SAMPLE_GROUP, group);
     }
 }
