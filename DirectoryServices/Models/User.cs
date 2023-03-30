@@ -14,6 +14,7 @@ namespace DirectoryServices.Models
         public string? LastName { get; set; }
         public string? Phone { get; set; }
         public string? Username { get; set; }
+        public string? Uid { get; set; }
         public ActiveDirectoryUserAccountControl UserAccountControl { get; set; }
         public Dictionary<string?, Group> Groups { get; set; } = new Dictionary<string?, Group>();
     }

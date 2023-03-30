@@ -1,5 +1,5 @@
 using DirectoryServices.Impl;
-using DirectoryServices.Interfaces;
+using DirectoryServices.Models;
 using DirectoryServices.Settings;
 
 using DotNet.Testcontainers.Builders;
@@ -9,18 +9,30 @@ using Microsoft.Extensions.Logging;
 
 using Moq;
 
+using Xunit.Abstractions;
+
 namespace DirectoryServices.Tests;
 
 public class IntegrationTests : IAsyncLifetime, IDisposable
 {
     private const ushort LDAP_PORT = 389;
     private const ushort HOST_LDAP_PORT = 10389;
-
     private const string USER_QUERY = "(cn=*)";
-    private const string SAMPLE_USER_GUID = "18d0e2f5-deb8-4e0c-a483-1313d60863fc";
-
+    private readonly User SAMPLE_USER = new User
+    {
+        DisplayName = "Fry",
+        DistinguishedName = "cn=Philip J. Fry,ou=people,dc=planetexpress,dc=com",
+        Email = "fry@planetexpress.com",
+        FirstName = "Philips",
+        Guid = "18d0e2f5-deb8-4e0c-a483-1313d60863fc",
+        LastName = "Fry",
+        Sid = "S-1-5-21-3477787073-812361429-1014394823",
+        Uid = "fry",
+        Username = null
+    };
     private readonly CancellationTokenSource _cts = new(TimeSpan.FromMinutes(1));
     private readonly IContainer _ldapContainer;
+    private readonly ITestOutputHelper _testOutputHelper;
     private readonly DirectorySettings _directorySettings = new DirectorySettings
     {
         BindDistinguishedName = "cn=admin,dc=planetexpress,dc=com",
@@ -39,7 +51,7 @@ public class IntegrationTests : IAsyncLifetime, IDisposable
         Threads = 4
     };
 
-    public IntegrationTests()
+    public IntegrationTests(ITestOutputHelper testOutputHelper)
     {
         _ldapContainer = new ContainerBuilder()
             .WithImage("ghcr.io/maiorsi/ldap-test-server:0.2")
@@ -48,6 +60,8 @@ public class IntegrationTests : IAsyncLifetime, IDisposable
             .WithPortBinding(LDAP_PORT, true)
             .WithWaitStrategy(Wait.ForUnixContainer().UntilContainerIsHealthy(5))
             .Build();
+
+        _testOutputHelper = testOutputHelper;
     }
 
     public void Dispose()
@@ -72,9 +86,9 @@ public class IntegrationTests : IAsyncLifetime, IDisposable
 
         _directorySettings.LdapConnectionPort = hostPort;
 
-        var mockLogger = Mock.Of<ILogger<NovellDirectoryService>>();
+        var logger = _testOutputHelper.BuildLoggerFor<NovellDirectoryService>();
 
-        var directoryService = new NovellDirectoryService(mockLogger, _directorySettings);
+        var directoryService = new NovellDirectoryService(logger, _directorySettings);
 
         var users = directoryService.SearchUsersByLdapQuery(USER_QUERY, 0, 10);
 
@@ -93,8 +107,8 @@ public class IntegrationTests : IAsyncLifetime, IDisposable
 
         var directoryService = new NovellDirectoryService(mockLogger, _directorySettings);
 
-        var user = directoryService.SearchUserByGuid(SAMPLE_USER_GUID);
+        var user = directoryService.SearchUserByGuid(SAMPLE_USER.Guid!);
 
-        Console.Out.WriteLine(user);
+        Assert.Equivalent(SAMPLE_USER, user);
     }
 }

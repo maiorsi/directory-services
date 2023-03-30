@@ -84,6 +84,22 @@ namespace DirectoryServices.Helpers
 
                 try
                 {
+                    if (attributes.ContainsKey("uid"))
+                    {
+                        user.Uid = attributes["uid"]?.StringValue;
+                    }
+                    else
+                    {
+                        _logger.LogDebug("Failed to find uid attribute for user {user}", ldapEntry?.Dn);
+                    }
+                }
+                catch (Exception exception)
+                {
+                    _logger.LogWarning("Exception occurred parsing uid for user {user} {exception}", ldapEntry?.Dn, exception);
+                }
+
+                try
+                {
                     if (attributes.ContainsKey("mail"))
                     {
                         user.Email = attributes["mail"]?.StringValue;

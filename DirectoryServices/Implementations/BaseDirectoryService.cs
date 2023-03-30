@@ -36,6 +36,7 @@ namespace DirectoryServices.Interfaces
             "sAMAccountName",
             "sn",
             "telephoneNumber",
+            "uid",
             "userPrincipalName",
             "userAccountControl"
         };
